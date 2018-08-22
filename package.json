@@ -7,8 +7,15 @@
     "dev": "next dev"
   },
   "dependencies": {
+    "@mybinder/host-cache": "^0.2.1",
+    "@nteract/editor": "^7.3.2",
+    "@nteract/logos": "^0.1.1",
+    "@nteract/messaging": "^4.1.2",
+    "@nteract/transforms": "^4.4.2",
+    "lodash": "^4.17.10",
     "next": "^6.1.1",
     "react": "^16.4.2",
-    "react-dom": "^16.4.2"
+    "react-dom": "^16.4.2",
+    "rxjs": "^6.2.2"
   }
 }
