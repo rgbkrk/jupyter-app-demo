@@ -2,5 +2,13 @@
   "name": "practical-react",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev"
+  },
+  "dependencies": {
+    "next": "^6.1.1",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2"
+  }
 }

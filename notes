@@ -1,0 +1,5 @@
+yarn init
+
+yarn add next react react-dom
+
+
