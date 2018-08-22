@@ -1,4 +1,5 @@
 import * as React from "react";
+import Debug from "../components/debug";
 
 import PresentationCell from "../components/presentation-cell";
 import CodeState from "../components/code-state";
@@ -34,10 +35,11 @@ const Index = () => {
           {kernel =>
             kernel ? (
               <CodeState kernel={kernel}>
-                <PresentationCell key={"the-cell"} />
+                <Debug />
+                <PresentationCell />
               </CodeState>
             ) : (
-              <PresentationCell key={"the-cell"} />
+              <div>No kernel yet</div>
             )
           }
         </Kernel.Consumer>
