@@ -1,5 +1,9 @@
+# https://github.com/rgbkrk/jupyter-app-demo
+
 yarn init
 
 yarn add next react react-dom
 
+# Edit package.json to include "dev" script
 
+yarn dev
