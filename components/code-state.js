@@ -16,7 +16,7 @@ export default class CodeState extends React.Component {
   }
 
   componentDidUpdate() {
-    this.getKernelInfo();
+    // this.getKernelInfo();
   }
 
   getKernelInfo() {
