@@ -5,8 +5,6 @@ import { first, map } from "rxjs/operators";
 const transforms = require("@nteract/transforms");
 const messaging = require("@nteract/messaging");
 
-// Container (?) component for passing through
-
 export default class CodeState extends React.Component {
   constructor(props) {
     super(props);
@@ -49,31 +47,42 @@ export default class CodeState extends React.Component {
   }
 
   componentDidMount() {
-    this.subscription = this.props.kernel.channels.subscribe(
-      msg => {
-        if (
-          msg.parent_header &&
-          typeof msg.parent_header.msg_id === "string"
-        ) {
-          const parent_id = msg.parent_header.msg_id;
+    this.subscription = this.props.kernel.channels
+      .pipe()
+      .subscribe(
+        msg => {
+          if (
+            msg.parent_header &&
+            typeof msg.parent_header.msg_id === "string"
+          ) {
+            const parent_id = msg.parent_header.msg_id;
 
-          // Collect all messages
-          const messages = _.get(
-            this.state.messageCollections,
-            parent_id,
-            []
-          );
-          messages.push(msg);
-          this.setState({
-            messageCollections: {
-              ...this.state.messageCollections,
-              [parent_id]: messages
-            }
-          });
-        }
-      },
-      err => console.error(err)
-    );
+            // Collect all messages, grouping by parent_id
+
+            /** Raw JS way
+            const messages =
+              this.state.messageCollections[parent_id] ||
+              [];
+              */
+
+            /** lodash way */
+            const messages = _.get(
+              this.state.messageCollections,
+              parent_id,
+              []
+            );
+            messages.push(msg);
+
+            this.setState({
+              messageCollections: {
+                ...this.state.messageCollections,
+                [parent_id]: messages
+              }
+            });
+          }
+        },
+        err => console.error(err)
+      );
 
     this.getKernelInfo();
   }

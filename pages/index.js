@@ -4,29 +4,80 @@ import Debug from "../components/debug";
 import PresentationCell from "../components/presentation-cell";
 import CodeState from "../components/code-state";
 
+const messaging = require("@nteract/messaging");
+
 import { Kernel } from "@mybinder/host-cache";
 const { WideLogo } = require("@nteract/logos");
+
+class Editor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      source: "import this",
+      parentMessageId: null
+    };
+  }
+
+  render() {
+    let outputs = null;
+
+    if (this.state.parentMessageId) {
+      outputs = (
+        <pre>
+          {JSON.stringify(
+            this.props.messageCollections[
+              this.state.parentMessageId
+            ],
+            null,
+            2
+          )}
+        </pre>
+      );
+    }
+
+    return (
+      <div
+        style={{
+          paddingBottom: "10px"
+        }}
+      >
+        <textarea
+          style={{
+            width: "100%",
+            border: "1px solid DeepPink",
+            height: "300px"
+          }}
+          onChange={event =>
+            this.setState({ source: event.target.value })
+          }
+          value={this.state.source}
+        />
+        <button
+          onClick={() => {
+            const message = messaging.executeRequest(
+              this.state.source
+            );
+
+            console.log(message);
+
+            this.setState({
+              parentMessageId: message.header.msg_id
+            });
+
+            this.props.kernel.channels.next(message);
+          }}
+        >
+          Click me!
+        </button>
+        {outputs}
+      </div>
+    );
+  }
+}
 
 const Index = () => {
   return (
     <div className="app">
-      <header>
-        <WideLogo height={40} theme="light" />
-
-        <p>
-          This <i>nteraction</i> brought to you in part by
-          binder, jupyter, and nteract.
-        </p>
-        <p>
-          A binder server is being launched in the
-          background now. You'll see a cell below when its
-          ready.
-        </p>
-        <p>
-          To get started, edit <code>pages/index.js</code>.
-        </p>
-      </header>
-
       <Kernel
         repo="binder-examples/requirements"
         kernelName="python3"
@@ -35,8 +86,9 @@ const Index = () => {
           {kernel =>
             kernel ? (
               <CodeState kernel={kernel}>
-                <Debug />
+                <Editor />
                 <PresentationCell />
+                <Debug />
               </CodeState>
             ) : (
               <div>No kernel yet</div>
